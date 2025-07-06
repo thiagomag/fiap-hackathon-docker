@@ -32,6 +32,17 @@ services:
     networks:
       - fiap-network
 
+  api-gateway-fiap-service:
+    image: thiagomag/api-gateway-fiap-service:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-gateway-fiap-service
+    ports:
+      - "8080:8080"
+    networks:
+      - fiap-network
+
   cadastro-usuarios-service:
     image: thiagomag/cadastro-usuarios-service:latest
     build:
@@ -49,6 +60,51 @@ services:
       DATABASE_PASSWORD: postgres
     depends_on:
       - postgres
+      - api-gateway-fiap-service
+    networks:
+      - fiap-network
+
+  estoque-medicamentos-service:
+    image: thiagomag/estoque-medicamentos-service:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: estoque-medicamentos-service
+    ports:
+      - "8082:8082"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: medicamentos
+      DB_URL_PARAM: ?ssl=false
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+    depends_on:
+      - postgres
+      - kafka
+      - api-gateway-fiap-service
+    networks:
+      - fiap-network
+
+  notificacao-service:
+    image: thiagomag/notificacao-service:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notificacao-service
+    ports:
+      - "8083:8083"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: notificacao
+      DB_URL_PARAM: ?ssl=false
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+    depends_on:
+      - postgres
+      - kafka
+      - api-gateway-fiap-service
     networks:
       - fiap-network
 
