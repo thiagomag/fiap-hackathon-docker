@@ -40,6 +40,10 @@ services:
     container_name: api-gateway-fiap-service
     ports:
       - "8080:8080"
+    environment:
+        AUTH_SERVICE_PATH: http://cadastro-usuarios-service:8081
+        NOTIFICACAO_SERVICE_PATH: http://notificacao-service:8083
+        CADASTRO_MEDICAMENTOS_SERVICE_PATH: http://estoque-medicamentos-service:8082
     networks:
       - fiap-network
 
@@ -79,6 +83,7 @@ services:
       DB_URL_PARAM: ?ssl=false
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       - postgres
       - kafka
@@ -101,6 +106,7 @@ services:
       DB_URL_PARAM: ?ssl=false
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
+      CADASTRO_USUARIO_SERVICE_HOST: http://api-gateway-fiap-service:8080
     depends_on:
       - postgres
       - kafka
