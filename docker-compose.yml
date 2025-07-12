@@ -44,6 +44,8 @@ services:
         AUTH_SERVICE_PATH: http://cadastro-usuarios-service:8081
         NOTIFICACAO_SERVICE_PATH: http://notificacao-service:8083
         CADASTRO_MEDICAMENTOS_SERVICE_PATH: http://estoque-medicamentos-service:8082
+        FORNECEDOR_SERVICE_PATH: http://fornecedor-service:8084
+        REPOSICAO_SERVICE_PATH: http://reposicao-service:8085
     networks:
       - fiap-network
 
@@ -84,6 +86,7 @@ services:
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      FORNECEDOR_SERVICE_HOST: http://api-gateway-fiap-service:8080
     depends_on:
       - postgres
       - kafka
@@ -107,6 +110,51 @@ services:
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
       CADASTRO_USUARIO_SERVICE_HOST: http://api-gateway-fiap-service:8080
+      MEDICAMENTOS_SERVICE_HOST: http://api-gateway-fiap-service:8080
+    depends_on:
+      - postgres
+      - kafka
+      - api-gateway-fiap-service
+    networks:
+      - fiap-network
+
+  fornecedor-service:
+    image: thiagomag/fornecedor-service:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fornecedor-service
+    ports:
+      - "8084:8084"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: fornecedor_db
+      DB_URL_PARAM: ?ssl=false
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+    depends_on:
+      - postgres
+      - api-gateway-fiap-service
+    networks:
+      - fiap-network
+
+  reposicao-service:
+    image: thiagomag/reposicao-service:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reposicao-service
+    ports:
+      - "8085:8085"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: reposicao
+      DB_URL_PARAM: ?ssl=false
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      FORNECEDOR_SERVICE_HOST: http://api-gateway-fiap-service:8080
     depends_on:
       - postgres
       - kafka
