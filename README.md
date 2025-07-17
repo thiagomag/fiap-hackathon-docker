@@ -5,3 +5,4 @@ Docker Compose para os seguintes projetos:
 - notificação-service - https://github.com/thiagomag/notificacao-service
 - api-gateway-service - https://github.com/thiagomag/api-gateway-fiap-service
 - fornecedor-service - https://github.com/GiordanoFerreira/fornecedor-service
+- reposicao-service - https://github.com/VitorBatista92/reposicao-service
