@@ -155,6 +155,8 @@ services:
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
       FORNECEDOR_SERVICE_HOST: http://api-gateway-fiap-service:8080
+      MEDICAMENTO_SERVICE_HOST: http://api-gateway-fiap-service:8080
+      SPRING_KAFKA_BOOTSTRAP_SERVERSÇ: kafka
     depends_on:
       - postgres
       - kafka
